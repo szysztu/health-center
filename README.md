@@ -9,7 +9,6 @@
 - [Contact](#contact)
 
 
-
 ## Introduction
 This application serves to manage schedules in health centre.
 App contains two microservices:
