@@ -56,5 +56,5 @@ Depends of project is needed:
 
 Szymon Sztukowski szymon.sztukowski@aacss.de
 
-https://github.com/szysztu/my-app
+https://github.com/szysztu/health-center
 
