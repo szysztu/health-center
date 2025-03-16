@@ -1,4 +1,4 @@
-<h1 align="center"> my-app </h1> <br>
+<h1 align="center"> health-center </h1> <br>
 
 ## Table of Contents
 
@@ -24,6 +24,7 @@ App contains two microservices:
 - Spring Security and Keycloak - to authenticate patients and doctors
 - MySQL + Hibernate - managment of database
 - Docker - containerization for easy deployment
+- OpenAPI && SwaggerUI
 
 
 ## Requirements
