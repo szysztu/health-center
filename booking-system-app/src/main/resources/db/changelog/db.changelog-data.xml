@@ -1,0 +1,133 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="szszt (generated)" id="1741530710823-2">
+        <insert tableName="user">
+            <column name="id" valueNumeric="67"/>
+            <column name="password" value="string"/>
+            <column name="role" value="PATIENT"/>
+            <column name="token"/>
+            <column name="version" valueNumeric="2"/>
+            <column name="created_at" value="2025-03-03T02:17:38.271611"/>
+            <column name="updated_at" value="2025-03-04T22:01:25.436160"/>
+            <column name="birth_date" valueDate="1950-03-26"/>
+            <column name="first_name" value="string3333"/>
+            <column name="last_name" value="string2121"/>
+            <column name="phone_number" value="123456789"/>
+            <column name="email" value="jan.kowalski@example.com"/>
+            <column name="specialisation"/>
+            <column name="confirmation_method" value="EMAIL"/>
+        </insert>
+        <insert tableName="user">
+            <column name="id" valueNumeric="68"/>
+            <column name="password" value="string"/>
+            <column name="role" value="DOCTOR"/>
+            <column name="token"/>
+            <column name="version" valueNumeric="1"/>
+            <column name="created_at" value="2025-03-03T02:37:17.927186"/>
+            <column name="updated_at" value="2025-03-03T02:39:15.018701"/>
+            <column name="birth_date" valueDate="1950-04-26"/>
+            <column name="first_name" value="string"/>
+            <column name="last_name" value="Nowak"/>
+            <column name="phone_number" value="12343129"/>
+            <column name="email" value="tomasz.nowak@example.com"/>
+            <column name="specialisation" value="SURGEON"/>
+            <column name="confirmation_method"/>
+        </insert>
+        <insert tableName="user">
+            <column name="id" valueNumeric="69"/>
+            <column name="password" value="string1"/>
+            <column name="role" value="DOCTOR"/>
+            <column name="token"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="created_at" value="2025-03-05T01:24:12.125031"/>
+            <column name="updated_at" value="2025-03-05T01:24:12.125031"/>
+            <column name="birth_date" valueDate="1950-03-26"/>
+            <column name="first_name" value="Edward"/>
+            <column name="last_name" value="Kowal"/>
+            <column name="phone_number" value="12343129"/>
+            <column name="email" value="edward.kowal@example.com"/>
+            <column name="specialisation" value="CARDIOLOGIST"/>
+            <column name="confirmation_method"/>
+        </insert>
+    </changeSet>
+    <changeSet author="szszt (generated)" id="1741530710823-1">
+        <insert tableName="doctor_schedule">
+            <column name="id" valueNumeric="23"/>
+            <column name="version" valueNumeric="1"/>
+            <column name="day" valueDate="2025-03-15"/>
+            <column name="created_at" value="2025-03-03T02:57:01.497573"/>
+            <column name="updated_at" value="2025-03-03T02:57:42.975260"/>
+            <column name="start_time" valueDate="10:00:00"/>
+            <column name="booked" valueBoolean="true"/>
+            <column name="doctor_id" valueNumeric="68"/>
+            <column name="patient_id" valueNumeric="67"/>
+        </insert>
+        <insert tableName="doctor_schedule">
+            <column name="id" valueNumeric="24"/>
+            <column name="version" valueNumeric="3"/>
+            <column name="day" valueDate="2025-03-18"/>
+            <column name="created_at" value="2025-03-03T02:57:01.506013"/>
+            <column name="updated_at" value="2025-03-04T02:53:11.689589"/>
+            <column name="start_time" valueDate="11:00:00"/>
+            <column name="booked" valueBoolean="false"/>
+            <column name="doctor_id" valueNumeric="68"/>
+            <column name="patient_id"/>
+        </insert>
+        <insert tableName="doctor_schedule">
+            <column name="id" valueNumeric="25"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="day" valueDate="2025-03-15"/>
+            <column name="created_at" value="2025-03-03T02:57:01.508010"/>
+            <column name="updated_at" value="2025-03-03T02:57:01.508010"/>
+            <column name="start_time" valueDate="11:00:00"/>
+            <column name="booked" valueBoolean="false"/>
+            <column name="doctor_id" valueNumeric="68"/>
+            <column name="patient_id"/>
+        </insert>
+        <insert tableName="doctor_schedule">
+            <column name="id" valueNumeric="26"/>
+            <column name="version" valueNumeric="0"/>
+            <column name="day" valueDate="2025-03-15"/>
+            <column name="created_at" value="2025-03-03T02:57:01.509516"/>
+            <column name="updated_at" value="2025-03-03T02:57:01.509516"/>
+            <column name="start_time" valueDate="11:30:00"/>
+            <column name="booked" valueBoolean="false"/>
+            <column name="doctor_id" valueNumeric="68"/>
+            <column name="patient_id"/>
+        </insert>
+        <insert tableName="doctor_schedule">
+            <column name="id" valueNumeric="27"/>
+            <column name="version" valueNumeric="2"/>
+            <column name="day" valueDate="2025-03-15"/>
+            <column name="created_at" value="2025-03-04T02:38:02.004780"/>
+            <column name="updated_at" value="2025-03-04T02:54:32.122142"/>
+            <column name="start_time" valueDate="18:00:00"/>
+            <column name="booked" valueBoolean="false"/>
+            <column name="doctor_id" valueNumeric="68"/>
+            <column name="patient_id"/>
+        </insert>
+        <insert tableName="doctor_schedule">
+            <column name="id" valueNumeric="28"/>
+            <column name="version" valueNumeric="1"/>
+            <column name="day" valueDate="2025-04-15"/>
+            <column name="created_at" value="2025-03-04T03:00:37.249391"/>
+            <column name="updated_at" value="2025-03-07T03:05:20.260810"/>
+            <column name="start_time" valueDate="11:30:00"/>
+            <column name="booked" valueBoolean="true"/>
+            <column name="doctor_id" valueNumeric="68"/>
+            <column name="patient_id" valueNumeric="67"/>
+        </insert>
+        <insert tableName="doctor_schedule">
+            <column name="id" valueNumeric="29"/>
+            <column name="version" valueNumeric="1"/>
+            <column name="day" valueDate="2025-04-19"/>
+            <column name="created_at" value="2025-03-04T03:01:04.286404"/>
+            <column name="updated_at" value="2025-03-07T03:01:28.124038"/>
+            <column name="start_time" valueDate="11:30:00"/>
+            <column name="booked" valueBoolean="true"/>
+            <column name="doctor_id" valueNumeric="68"/>
+            <column name="patient_id" valueNumeric="67"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

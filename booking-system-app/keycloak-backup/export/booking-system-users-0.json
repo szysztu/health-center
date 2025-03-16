@@ -1,0 +1,65 @@
+{
+  "realm" : "booking-system",
+  "users" : [ {
+    "id" : "6894f507-1d03-4985-b38b-d78f155543cc",
+    "username" : "doctor987@gmail.com",
+    "email" : "doctor987@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1741658245414,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "19ce9cd4-1557-48fc-b923-f1af765caae3",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1741658284817,
+      "secretData" : "{\"value\":\"PhENTCSz1l/M5Ma9HL7Tz5lLQKvY5ee1J/YLeBvB2vUq5uAz7yCOaPYG2XCkzX6zyiMGbxBWjzTP/FwIHx4l3A==\",\"salt\":\"whT7qK5Vx+HGsgyclj7Isg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-booking-system", "DOCTOR" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "b847cdca-9d80-42d8-81e1-09957e851036",
+    "username" : "service-account-booking-app",
+    "emailVerified" : false,
+    "createdTimestamp" : 1741665949945,
+    "enabled" : true,
+    "totp" : false,
+    "serviceAccountClientId" : "booking-app",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "PATIENT", "default-roles-booking-system", "DOCTOR" ],
+    "clientRoles" : {
+      "booking-app" : [ "uma_protection" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "08c5a535-9ceb-4bb0-be66-30fafed0bf20",
+    "username" : "szymon0szymon@gmail.com",
+    "firstName" : "Szymon",
+    "lastName" : "Sz",
+    "email" : "szymon0szymon@gmail.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1741652341602,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "67c0164e-9ce3-4994-8b21-40e6a99734aa",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1741658208341,
+      "secretData" : "{\"value\":\"7z4TNlSdVQ6YeftLE7g1M3dYYh1aLmUlK1ytHRlH5gVDsL5Bqlia9k8YNobXm7wgQ/Edlxy8roEOLisp4bZ7kg==\",\"salt\":\"/GZl6F1/2S/rFlMADjLJ/g==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "PATIENT", "default-roles-booking-system" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}
