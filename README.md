@@ -54,7 +54,7 @@ Depends of project is needed:
 
 ## Contact
 
-Szymon Sztukowski szymon.sztukowski@aacss.de
+Szymon Sztukowski szsztukowski1@gmail.com
 
 https://github.com/szysztu/health-center
 
