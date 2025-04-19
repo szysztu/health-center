@@ -1,0 +1,160 @@
+version: '3.8'
+
+services:
+  keycloak-db:
+    image: mysql:8.0
+    container_name: keycloak-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: keycloakpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3307:3306"
+    volumes:
+      - keycloak-db-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
+    networks:
+      - kafka-net
+
+  keycloak:
+    build:
+      context: ./keycloak
+      dockerfile: Dockerfile
+    container_name: keycloak
+    restart: always
+    environment:
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://keycloak-db:3306/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloakpassword
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: keycloak
+      KC_HTTP_PORT: 8080
+      KC_FEATURES: "scripts"
+    ports:
+      - "8080:8080"
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    volumes:
+      - keycloak-data:/opt/keycloak/data
+      - ./keycloak/realms:/opt/keycloak/data/import
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - kafka-net
+
+  mysql-booking:
+    image: mysql:8.0
+    container_name: mysql-booking
+    restart: always
+    environment:
+      MYSQL_DATABASE: bookingsystem
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3308:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
+    volumes:
+      - mysql-booking-data:/var/lib/mysql
+    networks:
+      - kafka-net
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    restart: always
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper
+      - zookeeper-log:/var/log/zookeeper
+    networks:
+      - kafka-net
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    restart: always
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    networks:
+      - kafka-net
+
+  booking-system-app:
+    build: ./booking-system-app
+    container_name: booking-system-app
+    restart: always
+    depends_on:
+      - keycloak
+      - kafka
+      - mysql-booking
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-booking:3306/bookingsystem
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/booking-system
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/booking-system/protocol/openid-connect/certs
+    ports:
+      - "8081:8081"
+    volumes:
+      - booking-app-logs:/app/logs
+    networks:
+      - kafka-net
+
+  confirmation-boot:
+    build: ./confirmation-boot
+    container_name: confirmation-boot
+    restart: always
+    depends_on:
+      - kafka
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8082:8082"
+    volumes:
+      - confirmation-app-logs:/app/logs
+    networks:
+      - kafka-net
+
+networks:
+  kafka-net:
+    driver: bridge
+
+volumes:
+  keycloak-db-data:
+  mysql-booking-data:
+  keycloak-data:
+  zookeeper-data:
+  zookeeper-log:
+  kafka-data:
+  booking-app-logs:
+  confirmation-app-logs:

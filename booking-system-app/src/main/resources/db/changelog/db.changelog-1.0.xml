@@ -1,0 +1,76 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="szszt (generated)" id="1741530693223-2">
+        <createTable tableName="user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="role" type="VARCHAR(31)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="VARCHAR(45)"/>
+            <column name="version" type="INT"/>
+            <column name="created_at" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="datetime(6)"/>
+            <column name="birth_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="specialisation" type="VARCHAR(45)"/>
+            <column name="confirmation_method" type="VARCHAR(45)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="szszt (generated)" id="1741530693223-1">
+        <createTable tableName="doctor_schedule">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="version" type="INT"/>
+            <column name="day" type="date"/>
+            <column name="created_at" type="datetime(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="datetime(6)"/>
+            <column name="start_time" type="time"/>
+            <column name="booked" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="doctor_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patient_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="szszt (generated)" id="1741530693223-3">
+        <createIndex associatedWith="" indexName="FKqsmfhaydly40mknlb0dmti8sr" tableName="doctor_schedule">
+            <column name="doctor_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="szszt (generated)" id="1741530693223-4">
+        <createIndex associatedWith="" indexName="FKsfgoutjdrs0d0apx1graf7u8l" tableName="doctor_schedule">
+            <column name="patient_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="szszt (generated)" id="1741530693223-5">
+        <addForeignKeyConstraint baseColumnNames="doctor_id" baseTableName="doctor_schedule" constraintName="FKqsmfhaydly40mknlb0dmti8sr" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="user" validate="true"/>
+    </changeSet>
+    <changeSet author="szszt (generated)" id="1741530693223-6">
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="doctor_schedule" constraintName="FKsfgoutjdrs0d0apx1graf7u8l" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="user" validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>

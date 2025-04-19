@@ -1,0 +1,725 @@
+openapi: 3.0.3
+info:
+  title: Booking System API
+  description: API for managing doctor appointment bookings
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8088/api
+    description: Local server
+
+paths:
+
+  /patient/{patientId}:
+    get:
+      summary: Get patient data
+      description: Retrieves patient data based on ID.
+      operationId: getPatientById
+      tags:
+        - Patient
+      parameters:
+        - name: patientId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Patient data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientDTO"
+        "404":
+          description: Patient not found
+
+  /patient:
+    post:
+      summary: Patient registration
+      description: Creates a new Patient as a patient or doctor.
+      operationId: createPatient
+      tags:
+        - Patient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientCreateDTO"
+      responses:
+        "201":
+          description: Patient registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientDTO"
+        "400":
+          description: Data validation error
+
+    put:
+      summary: Update patient data
+      description: Updates patient data based on ID. `id` and `version` are required, other fields are optional.
+      operationId: updatePatient
+      tags:
+        - Patient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatientDTO"
+      responses:
+        "200":
+          description: Patient updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientDTO"
+        "400":
+          description: Data validation error
+        "404":
+          description: Patient not found
+        "409":
+          description: Version conflict (optimistic locking)
+
+    delete:
+      summary: Delete patient
+      description: Delete a patient based on `id` and `version`. Required a `PatientDTO` object with `id` and `version` fields filled.
+      operationId: deletePatient
+      tags:
+        - Patient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteReferenceDTO"
+      responses:
+        "204":
+          description: Patient deleted successfully (no content in response)
+        "404":
+          description: Patient not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Patient not found"
+        "409":
+          description: Version conflict (optimistic locking)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Version mismatch, Patient has been modified by another process"
+
+
+  /doctor/{doctorId}:
+    get:
+      summary: Get doctor data
+      description: Retrieves doctor data based on ID.
+      operationId: getDoctorById
+      tags:
+        - Doctor
+      parameters:
+        - name: doctorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Doctor data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DoctorDTO"
+        "404":
+          description: Doctor not found
+
+  /doctor:
+    post:
+      summary: Doctor registration
+      description: Creates a new doctor.
+      operationId: createDoctor
+      tags:
+        - Doctor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DoctorCreateDTO"
+      responses:
+        "201":
+          description: Doctor registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DoctorDTO"
+        "400":
+          description: Data validation error
+
+    put:
+      summary: Update doctor data
+      description: Updates doctor data based on ID. `id` and `version` are required, other fields are optional.
+      operationId: updateDoctor
+      tags:
+        - Doctor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DoctorDTO"
+      responses:
+        "200":
+          description: Doctor updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DoctorDTO"
+        "400":
+          description: Data validation error
+        "404":
+          description: Doctor not found
+        "409":
+          description: Version conflict (optimistic locking)
+
+    delete:
+      summary: Delete doctor
+      description: Delete a doctor based on `id` and `version`
+      operationId: deleteDoctor
+      tags:
+        - Doctor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteReferenceDTO"
+      responses:
+        "204":
+          description: Doctor deleted successfully (no content in response)
+        "404":
+          description: Doctor not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Doctor not found"
+        "409":
+          description: Version conflict (optimistic locking)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Version mismatch, doctor has been modified by another process"
+
+
+
+  /schedule/{scheduleId}:
+    get:
+      summary: Get a single doctor's schedule entry
+      description: Retrieves schedule data based on ID.
+      operationId: getDoctorSchedule
+      tags:
+        - DoctorSchedule
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Schedule entry found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DoctorScheduleSingleDTO"
+        "404":
+          description: Schedule entry not found
+
+  /schedule:
+    post:
+      summary: Add multiple schedule entries for a doctor
+      description: Adds one or more available time slots for a doctor.
+      operationId: addDoctorSchedules
+      tags:
+        - DoctorSchedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DoctorScheduleDTO"
+      responses:
+        "201":
+          description: Schedule entries added successfully.
+        "400":
+          description: Validation error.
+        "404":
+          description: Doctor not found.
+
+    put:
+      summary: Update a single schedule entry
+      description: Updates an existing schedule entry based on `id` and `version`. The `id` and `version` fields are mandatory.
+      operationId: updateDoctorSchedule
+      tags:
+        - DoctorSchedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DoctorScheduleSingleDTO"
+      responses:
+        "200":
+          description: Schedule entry updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DoctorScheduleSingleDTO"
+        "400":
+          description: Validation error.
+        "404":
+          description: Schedule entry not found.
+        "409":
+          description: Version conflict (optimistic locking).
+
+    delete:
+      summary: Delete a single schedule entry
+      description: Deletes a schedule entry based on `id` and `version`. The `id` and `version` fields are mandatory.
+      operationId: deleteDoctorSchedule
+      tags:
+        - DoctorSchedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteReferenceDTO"
+      responses:
+        "204":
+          description: Schedule entry deleted successfully.
+        "404":
+          description: Schedule entry not found.
+        "409":
+          description: Version conflict (optimistic locking).
+
+  /schedule/book:
+    put:
+      summary: Create a new booking
+      description: Updates an existing schedule, finally creating booking of schedule. entry based on `user id` and `schedule id`.
+      operationId: createBooking
+      tags:
+        - DoctorSchedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBookingDTO"
+      responses:
+        "200":
+          description: Schedule entry updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookingDTO"
+        "400":
+          description: Validation error (e.g., invalid doctor ID format).
+        "404":
+          description: No available schedules found for the specified doctor.
+
+
+  /schedule/criteria:
+    post:
+      summary: Get available doctor schedules based on search criteria
+      description: Retrieves doctor schedules filtered by date range, time range, and specialization.
+      operationId: getSchedulesByCriteria
+      tags:
+        - DoctorSchedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleCriteriaReqDTO"
+      responses:
+        "200":
+          description: List of available schedules that match the criteria.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ScheduleCriteriaReturnDTO"
+        "400":
+          description: Validation error.
+        "404":
+          description: No available schedules found matching the criteria.
+
+  /schedule/free/{doctorId}:
+    get:
+      summary: Get free schedules for a specific doctor
+      description: Retrieves a list of available schedules for a given doctor based on their ID.
+      operationId: getFreeSchedulesOfDoctor
+      tags:
+        - DoctorSchedule
+      parameters:
+        - name: doctorId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: List of available schedules for the doctor.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FreeSchedulesOfDoctorDTO"
+        "400":
+          description: Validation error (e.g., invalid doctor ID format).
+        "404":
+          description: No available schedules found for the specified doctor.
+
+
+components:
+  schemas:
+    PatientCreateDTO:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+        - confirmationMethod
+      properties:
+        firstName:
+          type: string
+          example: "Jan"
+        lastName:
+          type: string
+          example: "Kowalski"
+        email:
+          type: string
+          format: email
+          example: "jan.kowalski@example.com"
+        password:
+          type: string
+          format: password
+        phoneNumber:
+          type: string
+          example: "123456789"
+        birthDate:
+          type: string
+          format: date
+          x-java-type: java.time.LocalDate
+          example: "1990-05-20"
+        confirmationMethod:
+          type: string
+
+
+    PatientDTO:
+      type: object
+      required:
+        - id
+        - version
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        birthDate:
+          type: string
+          format: date
+          example: "1990-05-20"
+          x-java-type: java.time.LocalDate
+        version:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+          x-java-type: java.time.LocalDateTime
+        updatedAt:
+          type: string
+          format: date-time
+          x-java-type: java.time.LocalDateTime
+        confirmationMethod:
+          type: string
+
+    DoctorCreateDTO:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+        - specialisation
+      properties:
+        firstName:
+          type: string
+          example: "Jan"
+        lastName:
+          type: string
+          example: "Kowalski"
+        email:
+          type: string
+          format: email
+          example: "jan.kowalski@example.com"
+        password:
+          type: string
+          format: password
+        phoneNumber:
+          type: string
+          example: "123456789"
+        birthDate:
+          type: string
+          format: date
+          x-java-type: java.time.LocalDate
+          example: "1990-05-20"
+        specialisation:
+          type: string
+
+    DoctorDTO:
+      type: object
+      required:
+        - id
+        - version
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        birthDate:
+          type: string
+          format: date
+          example: "1990-05-20"
+          x-java-type: java.time.LocalDate
+        version:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+          x-java-type: java.time.LocalDateTime
+        updatedAt:
+          type: string
+          format: date-time
+          x-java-type: java.time.LocalDateTime
+        specialisation:
+          type: string
+
+    SingleTerminDTO:
+      type: object
+      properties:
+        day:
+          type: string
+          format: date
+          x-java-type: java.time.LocalDate
+          example: "2025-02-17"
+        startTime:
+          type: string
+          format: time
+          example: "17:00:00"
+          x-java-type: java.time.LocalTime
+        booked:
+          type: boolean
+          example: false
+
+    DoctorScheduleSingleDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        version:
+          type: integer
+        doctorId:
+          type: integer
+          format: int64
+        patientId:
+          type: integer
+          format: int64
+        day:
+          type: string
+          format: date
+          x-java-type: java.time.LocalDate
+          example: "2025-02-17"
+        startTime:
+          type: string
+          format: time
+          example: "17:00:00"
+          x-java-type: java.time.LocalTime
+        booked:
+          type: boolean
+          example: false
+
+    DoctorScheduleDTO:
+      type: object
+      properties:
+        doctorId:
+          type: integer
+          format: int64
+        termins:
+          type: array
+          items:
+            $ref: "#/components/schemas/SingleTerminDTO"
+
+    FreeSchedulesOfDoctorDTO:
+      type: object
+      properties:
+        doctorId:
+          type: integer
+          format: int64
+        scheduleId:
+          type: integer
+          format: int64
+        day:
+          type: string
+          format: date
+          x-java-type: java.time.LocalDate
+          example: "2025-02-18"
+        startTime:
+          type: string
+          format: time
+          example: "10:00:00"
+          x-java-type: java.time.LocalTime
+
+    ScheduleCriteriaReturnDTO:
+      type: object
+      properties:
+        doctorId:
+          type: integer
+          format: int64
+        doctorLastName:
+          type: string
+        specialisation:
+          type: string
+        day:
+          type: string
+          format: date
+          x-java-type: java.time.LocalDate
+          example: "2025-02-18"
+        startTime:
+          type: string
+          format: time
+          example: "10:00:00"
+          x-java-type: java.time.LocalTime
+        booked:
+          type: boolean
+
+    ScheduleCriteriaReqDTO:
+      type: object
+      properties:
+        specialisation:
+          type: string
+        startDay:
+          type: string
+          format: date
+          x-java-type: java.time.LocalDate
+          example: "2025-02-18"
+        endDay:
+          type: string
+          format: date
+          x-java-type: java.time.LocalDate
+          example: "2025-02-25"
+        startTime:
+          type: string
+          format: time
+          example: "10:00:00"
+          x-java-type: java.time.LocalTime
+        endTime:
+          type: string
+          format: time
+          example: "10:00:00"
+          x-java-type: java.time.LocalTime
+
+    DeleteReferenceDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 3
+        version:
+          type: integer
+          example: 1
+
+    CreateBookingDTO:
+      type: object
+      properties:
+        scheduleId:
+          type: integer
+          format: int64
+          example: 3
+        patientId:
+          type: integer
+          format: int64
+          example: 3
+
+    BookingDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        doctorId:
+          type: integer
+          format: int64
+        patientId:
+          type: integer
+          format: int64
+        day:
+          type: string
+          format: date
+          x-java-type: java.time.LocalDate
+          example: "2025-02-17"
+        startTime:
+          type: string
+          format: time
+          example: "17:00:00"
+          x-java-type: java.time.LocalTime
+        booked:
+          type: boolean
+          example: false
+
